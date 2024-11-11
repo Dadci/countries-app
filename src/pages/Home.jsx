@@ -42,13 +42,10 @@ const Home = () => {
     const searchResults = useSelector(state => state.search.searchResults)
     const filterResults = useSelector(state => state.filter.regionFilter)
 
-    const filteredCountries = countries.filter(country => {
-        if (filterResults) {
+    const displayedCountries = searchResults.length > 0
+        ? searchResults.filter(country => !filterResults || country.region === filterResults)
+        : countries.filter(country => !filterResults || country.region === filterResults)
 
-            return country.region === filterResults;
-        }
-        return true;
-    })
 
 
 
@@ -63,17 +60,10 @@ const Home = () => {
                     <Filter countries={countries} />
                 </div>
                 <div className='grid md:grid-cols-3 lg:grid-cols-4 place-items-center py-8 px-12 gap-10 sm:grid-cols-1'>
-                    {searchResults.length > 0 ? searchResults.map((country, index) => (
+                    {displayedCountries.map((country, index) => (
                         <CountryCard key={index} country={country} />
-                    )) : filteredCountries.map((country, index) => (
-                        <CountryCard key={index} country={country} />
-                    ))}
-
-
-
-
-
-
+                    )
+                    )}
                 </div>
             </>)
             }
